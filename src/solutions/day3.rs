@@ -22,10 +22,8 @@ fn solve_day3(x_pattern: usize, y_pattern: usize) -> Result<i64, Box<dyn Error>>
             result += 1;
         }
         x += x_pattern;
+        x %= width;
         y += y_pattern;
-        if x >= width {
-            x %= width;
-        }
     }
     Ok(result)
 }
