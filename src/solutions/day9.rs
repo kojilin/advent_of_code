@@ -45,27 +45,28 @@ fn solve_day9_2(target: i64) -> Result<i64, Box<dyn Error>> {
     let input = fs::read_to_string("src/solutions/day9.txt")?;
     let lines = input.lines();
     // using 1 to n
-    let mut sum = vec![];
     let mut numbers = vec![];
-    sum.push(0);
     numbers.push(0);
     for line in lines {
         let value = line.parse::<i64>()?;
-        let next = sum.last().unwrap() + value;
-        sum.push(next);
         numbers.push(value);
     }
 
-    for i in 1..sum.len() {
-        for j in i + 1..sum.len() {
-            if target == sum[j] - sum[i - 1] {
-                let range = &mut numbers[i..j + 1];
-                range.sort();
-                return Ok(range[0] + range[range.len() - 1]);
-            }
+    let mut i = 0;
+    let mut j = 0;
+    let mut temp = numbers[0];
+    while temp != target {
+        if temp < target {
+            j += 1;
+            temp += numbers[j];
+        } else {
+            i += 1;
+            temp -= numbers[i];
         }
     }
-    panic!("No answer.")
+    let range = &mut numbers[i..j + 1];
+    range.sort();
+    return Ok(range[0] + range[range.len() - 1]);
 }
 
 #[cfg(test)]
