@@ -17,7 +17,6 @@ fn solve_day10() -> Result<i64, Box<dyn Error>> {
         tmp[v - current - 1] += 1;
         current = v;
     }
-    println!("{:?}", tmp);
     Ok(tmp[0] * (tmp[2] + 1))
 }
 
