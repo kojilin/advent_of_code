@@ -1,0 +1,103 @@
+[package]
+name = "_2019"
+version = "0.1.0"
+authors = ["kojilin <koji.lin@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+regex = "1"
+num-bigint = "0.2.4"
+
+[[bin]]
+name = "day3"
+path = "src/day3/bin/main.rs"
+
+[[bin]]
+name = "day4"
+path = "src/day4/bin/main.rs"
+
+[[bin]]
+name = "day5"
+path = "src/day5/bin/main.rs"
+
+[[bin]]
+name = "day6"
+path = "src/day6/bin/main.rs"
+
+[[bin]]
+name = "day7"
+path = "src/day7/bin/main.rs"
+
+[[bin]]
+name = "day8"
+path = "src/day8/bin/main.rs"
+
+[[bin]]
+name = "day9"
+path = "src/day9/bin/main.rs"
+
+[[bin]]
+name = "day10"
+path = "src/day10/bin/main.rs"
+
+[[bin]]
+name = "day11"
+path = "src/day11/bin/main.rs"
+
+[[bin]]
+name = "day12"
+path = "src/day12/bin/main.rs"
+
+[[bin]]
+name = "day13"
+path = "src/day13/bin/main.rs"
+
+[[bin]]
+name = "day14"
+path = "src/day14/bin/main.rs"
+
+[[bin]]
+name = "day15"
+path = "src/day15/bin/main.rs"
+
+[[bin]]
+name = "day16"
+path = "src/day16/bin/main.rs"
+
+[[bin]]
+name = "day17"
+path = "src/day17/bin/main.rs"
+
+[[bin]]
+name = "day18"
+path = "src/day18/bin/main.rs"
+
+[[bin]]
+name = "day19"
+path = "src/day19/bin/main.rs"
+
+[[bin]]
+name = "day20"
+path = "src/day20/bin/main.rs"
+
+[[bin]]
+name = "day21"
+path = "src/day21/bin/main.rs"
+
+[[bin]]
+name = "day22"
+path = "src/day22/bin/main.rs"
+
+[[bin]]
+name = "day23"
+path = "src/day23/bin/main.rs"
+
+[[bin]]
+name = "day24"
+path = "src/day24/bin/main.rs"
+
+[[bin]]
+name = "day25"
+path = "src/day25/bin/main.rs"
