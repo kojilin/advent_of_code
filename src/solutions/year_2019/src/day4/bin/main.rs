@@ -27,7 +27,7 @@ fn check(number: &i32) -> bool {
             return false;
         }
     }
-    if count == 2{
+    if count == 2 {
         has_one_pair = true;
     }
     has_double && has_one_pair

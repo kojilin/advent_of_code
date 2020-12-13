@@ -91,7 +91,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 //arrived
                 if level == 0 {
                     println!("{}", step + 1);
-                    return Ok(())
+                    return Ok(());
                 } else {
                     continue;
                 }
@@ -125,4 +125,3 @@ fn build_map(input: &str) -> (i32, i32, HashMap<(i32, i32), char>) {
     }
     (x, y, map)
 }
-

@@ -1,4 +1,4 @@
-mod year_2020{
+mod year_2020 {
     mod day1;
     mod day2;
     mod day3;
@@ -11,5 +11,5 @@ mod year_2020{
     mod day10;
     mod day11;
     mod day12;
+    mod day13;
 }
-
