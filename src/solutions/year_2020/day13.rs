@@ -35,23 +35,21 @@ fn solve_day13_2() -> Result<i64, Box<dyn Error>> {
         }
         count += 1;
     }
+    let mut bi = 0;
+    let mut delta = 1;
+    let mut time = 0;
+    while bi < pairs.len() {
+        let interval = pairs[bi].0;
+        let count = pairs[bi].1;
 
-    println!("{:?}", pairs);
-
-    let first = pairs[0].0;
-    let mut result = first;
-    let mut a = 'a';
-    let mut count = 0;
-    for &(number, index) in pairs.iter().skip(1) {
-        // put this to wolframalpha -> get a's possible result -> use smallest number.
-        print!("{}{}-{}x={}, ", number, (a as u8 + count) as char, first, index);
-        count += 1;
-        if (a as u8 + count) as char == 'e' {
-            // wolframalpha will convert e. 19e-37x=56 -> 19x10^-37x=56
-            count += 1;
+        if (time + count) % interval == 0 {
+            delta *= interval;
+            bi += 1;
+            continue;
         }
+        time += delta;
     }
-    Ok(result)
+    Ok(time)
 }
 
 #[cfg(test)]
@@ -66,7 +64,7 @@ mod tests {
 
     #[test]
     fn test2() -> Result<(), Box<dyn Error>> {
-        solve_day13_2()?;
+        println!("Result2: {}", solve_day13_2()?);
         Ok(())
     }
 }
