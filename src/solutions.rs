@@ -16,4 +16,5 @@ mod year_2020 {
     mod day15;
     mod day16;
     mod day17;
+    mod day18;
 }
