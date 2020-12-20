@@ -5,6 +5,58 @@ use std::fs;
 use regex::Regex;
 
 fn solve_day19() -> Result<i64, Box<dyn Error>> {
+    let (inputs, dp) = read_input()?;
+    let mut pattern = dp.get(&0).unwrap().to_owned();
+    pattern.insert(0, '^');
+    pattern.push('$');
+    let regex = Regex::new(&pattern)?;
+    let mut sum = 0;
+    for input in inputs {
+        if regex.is_match(&input) {
+            sum += 1;
+        }
+    }
+    Ok(sum)
+}
+
+fn solve_day19_2() -> Result<i64, Box<dyn Error>> {
+    let (inputs, dp) = read_input()?;
+    let mut pattern = dp.get(&0).unwrap().to_owned();
+    let special = Regex::new(&format!("^(?P<prefix>({})+)(?P<postfix>({})+)$",
+                                      dp.get(&42).unwrap(),
+                                      dp.get(&31).unwrap()))?;
+    let prefix_rule = Regex::new(&format!("{}",
+                                          dp.get(&42).unwrap()))?;
+    let postfix_rule = Regex::new(&format!("{}",
+                                           dp.get(&31).unwrap()))?;
+    // we knot 0 = 8 11
+    pattern.insert(0, '^');
+    pattern.push('$');
+    let regex = Regex::new(&pattern)?;
+    let mut sum = 0;
+    for input in inputs {
+        if regex.is_match(&input) {
+            sum += 1;
+        } else {
+            // let's check extra rule.
+            // 8-> 42, 42, 42, 8
+            // 11-> 42 42 42, 11, 31, 31, 31
+            if !special.is_match(&input) {
+                continue;
+            }
+            for capture in special.captures_iter(&input) {
+                let prefix_count = prefix_rule.captures_iter(&capture["prefix"]).count();
+                let postfix_count = postfix_rule.captures_iter(&capture["postfix"]).count();
+                if prefix_count > postfix_count {
+                    sum += 1;
+                }
+            }
+        }
+    }
+    Ok(sum)
+}
+
+fn read_input() -> Result<(Vec<String>, HashMap<i64, String>), Box<dyn Error>> {
     let input = fs::read_to_string("src/solutions/year_2020/day19.txt")?;
     let mut end_rules = HashMap::new();
     let mut rules = HashMap::new();
@@ -36,22 +88,12 @@ fn solve_day19() -> Result<i64, Box<dyn Error>> {
             }
         } else {
             //input
-            inputs.push(line);
+            inputs.push(line.to_owned());
         }
     }
     let mut dp = HashMap::new();
-
-    let mut pattern: String = make_rule_pattern(0, &rules, &end_rules, &mut dp);
-    pattern.insert(0, '^');
-    pattern.push('$');
-    let regex = Regex::new(&pattern)?;
-    let mut sum = 0;
-    for input in inputs {
-        if regex.is_match(input) {
-            sum += 1;
-        }
-    }
-    Ok(sum)
+    make_rule_pattern(0, &rules, &end_rules, &mut dp);
+    Ok((inputs, dp))
 }
 
 fn make_rule_pattern(id: i64, rules: &HashMap<i64, Vec<Vec<&str>>>, end_rules: &HashMap<i64, &str>, dp: &mut HashMap<i64, String>) -> String {
@@ -99,6 +141,12 @@ mod tests {
     #[test]
     fn test() -> Result<(), Box<dyn Error>> {
         println!("Result1: {}", solve_day19()?);
+        Ok(())
+    }
+
+    #[test]
+    fn test2() -> Result<(), Box<dyn Error>> {
+        println!("Result2: {}", solve_day19_2()?);
         Ok(())
     }
 }
