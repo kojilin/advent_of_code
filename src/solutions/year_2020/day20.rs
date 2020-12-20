@@ -1,3 +1,4 @@
+use std::cmp::max;
 use std::collections::HashMap;
 use std::error::Error;
 use std::fs;
@@ -17,49 +18,31 @@ impl Image {
 
     // col change left<->right
     fn flip_vertically(&self) -> Image {
-        let mut data = vec![];
-        for r_i in 0..self.data.len() {
-            let mut row = vec![];
-            for c_i in 0..self.data[r_i].len() {
-                row.push(self.data[r_i][c_i]);
-            }
-            row.reverse();
-            data.push(row);
-        }
         Image {
             id: self.id,
-            data,
+            data: flip_vertically(&self.data),
         }
     }
 
     // row change top<->down
     fn flip_horizontally(&self) -> Image {
-        let mut data = self.data.clone();
-        data.reverse();
         Image {
             id: self.id,
-            data,
+            data: flip_horizontally(&self.data),
         }
     }
 
     fn rotate_clockwise(&self) -> Image {
-        let size = self.data.len();
-        let mut data = vec![vec!['-'; size]; size];
-        for r_i in 0..size {
-            for c_i in 0..self.data[r_i].len() {
-                data[c_i][size - 1 - r_i] = self.data[r_i][c_i];
-            }
-        }
         Image {
             id: self.id,
-            data,
+            data: rotate_clockwise(&self.data),
         }
     }
 
     // target_border top:0, right:1, bottom:2, left:3
     fn compute_behavior(&self, target_number: i64, target_border: usize) -> Image {
-        let raw_numbers = self.all_raw_number();
-        let flipped_numbers = self.all_flipped_number();
+        let raw_numbers = self.list_border_numbers();
+        let flipped_numbers = self.list_flipped_border_numbers();
         if let Some(index) = raw_numbers.iter().position(|&n| n == target_number) {
             if index == target_border {
                 self.clone()
@@ -143,77 +126,62 @@ impl Image {
         }
     }
 
-    fn count_row(&self, row_index: usize) -> i64 {
-        let top_1 = i64::from_str_radix(&self.data[row_index].clone().into_iter().collect::<String>(), 2).unwrap();
-        let top_2 = i64::from_str_radix(&self.data[row_index].clone().into_iter().rev().collect::<String>(), 2).unwrap();
-        if top_1 > top_2 {
-            top_1
-        } else {
-            top_2
-        }
+    fn calculate_unified_row_pattern(&self, row_index: usize) -> i64 {
+        max(self.calculate_row_pattern(row_index, false), self.calculate_row_pattern(row_index, true))
     }
 
-    fn count_row_2(&self, row_index: usize, reverse: bool) -> i64 {
-        if !reverse {
-            i64::from_str_radix(&self.data[row_index].clone().into_iter().collect::<String>(), 2).unwrap()
-        } else {
+    fn calculate_row_pattern(&self, row_index: usize, reverse: bool) -> i64 {
+        if reverse {
             i64::from_str_radix(&self.data[row_index].clone().into_iter().rev().collect::<String>(), 2).unwrap()
+        } else {
+            i64::from_str_radix(&self.data[row_index].clone().into_iter().collect::<String>(), 2).unwrap()
         }
     }
 
-    fn count_col(&self, col_index: usize) -> i64 {
+    fn calculate_unified_col_pattern(&self, col_index: usize) -> i64 {
+        max(self.calculate_col_pattern(col_inndex, false),
+            self.calculate_col_pattern(col_inndex, true))
+    }
+
+    fn calculate_col_pattern(&self, col_index: usize, reverse: bool) -> i64 {
         let mut col = vec![];
         for index in 0..self.data.len() {
             col.push(self.data[index][col_index]);
         }
-        let left_1 = i64::from_str_radix(&col.clone().into_iter().collect::<String>(), 2).unwrap();
-        let left_2 = i64::from_str_radix(&col.clone().into_iter().rev().collect::<String>(), 2).unwrap();
-        if left_1 > left_2 {
-            left_1
-        } else {
-            left_2
-        }
-    }
-
-    fn count_col_2(&self, col_index: usize, reverse: bool) -> i64 {
-        let mut col = vec![];
-        for index in 0..self.data.len() {
-            col.push(self.data[index][col_index]);
-        }
-        if !reverse {
-            i64::from_str_radix(&col.clone().into_iter().collect::<String>(), 2).unwrap()
-        } else {
+        if reverse {
             i64::from_str_radix(&col.clone().into_iter().rev().collect::<String>(), 2).unwrap()
+        } else {
+            i64::from_str_radix(&col.clone().into_iter().collect::<String>(), 2).unwrap()
         }
     }
 
     // Up, right, bottom, left with largest for easy matching.
-    fn all_number(&self) -> Vec<i64> {
+    fn list_unified_border_numbers(&self) -> Vec<i64> {
         let mut result = vec![];
-        result.push(self.count_row(0));
-        result.push(self.count_col(self.data[0].len() - 1));
-        result.push(self.count_row(self.data.len() - 1));
-        result.push(self.count_col(0));
+        result.push(self.calculate_unified_row_pattern(0));
+        result.push(self.calculate_unified_col_pattern(self.data[0].len() - 1));
+        result.push(self.calculate_unified_row_pattern(self.data.len() - 1));
+        result.push(self.calculate_unified_col_pattern(0));
         result
     }
 
     // Up, right, bottom, left without flip/rotate.
-    fn all_raw_number(&self) -> Vec<i64> {
+    fn list_border_numbers(&self) -> Vec<i64> {
         let mut result = vec![];
-        result.push(self.count_row_2(0, false));
-        result.push(self.count_col_2(self.data[0].len() - 1, false));
-        result.push(self.count_row_2(self.data.len() - 1, false));
-        result.push(self.count_col_2(0, false));
+        result.push(self.calculate_row_pattern(0, false));
+        result.push(self.calculate_col_pattern(self.data[0].len() - 1, false));
+        result.push(self.calculate_row_pattern(self.data.len() - 1, false));
+        result.push(self.calculate_col_pattern(0, false));
         result
     }
 
     // Up, right, bottom, left.
-    fn all_flipped_number(&self) -> Vec<i64> {
+    fn list_flipped_border_numbers(&self) -> Vec<i64> {
         let mut result = vec![];
-        result.push(self.count_row_2(0, true));
-        result.push(self.count_col_2(self.data[0].len() - 1, true));
-        result.push(self.count_row_2(self.data.len() - 1, true));
-        result.push(self.count_col_2(0, true));
+        result.push(self.calculate_row_pattern(0, true));
+        result.push(self.calculate_col_pattern(self.data[0].len() - 1, true));
+        result.push(self.calculate_row_pattern(self.data.len() - 1, true));
+        result.push(self.calculate_col_pattern(0, true));
         result
     }
 }
@@ -223,6 +191,8 @@ fn solve_day20() -> Result<(usize, usize), Box<dyn Error>> {
     let input = fs::read_to_string("src/solutions/year_2020/day20.txt")?;
     let mut images = vec![];
     let mut image = None;
+    // Change #->1, .->0. Will convert it to number.
+    // The 2 same number means it's possible to be nearby image.
     for line in input.lines() {
         // input is 10x10
         if title_regex.is_match(line) {
@@ -240,11 +210,11 @@ fn solve_day20() -> Result<(usize, usize), Box<dyn Error>> {
         }
     }
     images.push(image.unwrap());
-    // border data -> VeC<Image>
+    // border data -> Vec<Image>
     let mut inverse_mapping = HashMap::new();
     let mut map = HashMap::new();
     for image in &images {
-        let numbers = image.all_number();
+        let numbers = image.list_unified_border_numbers();
         for number in numbers {
             let count = map.entry(number).or_insert(0);
             *count += 1;
@@ -255,8 +225,10 @@ fn solve_day20() -> Result<(usize, usize), Box<dyn Error>> {
     let mut result = 1;
     let mut corners = vec![];
 
+    // Check each border pattern has how many border.
+    // The question is designed that there is no border pattern has borders larger than 2.
     for image in &images {
-        let numbers = image.all_number();
+        let numbers = image.list_unified_border_numbers();
         // find not enough block
         let count = numbers.iter().filter(|&n| *map.get(n).unwrap() == 1).count();
         if count >= 2 {
@@ -267,14 +239,14 @@ fn solve_day20() -> Result<(usize, usize), Box<dyn Error>> {
     println!("corners: {:?}", corners.iter().map(|img| img.id).collect::<Vec<usize>>());
     // due to each border has 1-1 mapping, it should be easy to find the combinations.
     let first_image = corners[0];
-    for (index, number) in first_image.all_number().iter().enumerate() {
+    for (index, number) in first_image.list_unified_border_numbers().iter().enumerate() {
         if map.get(&number).unwrap() == &1 {
             // this is 0,3. So just used it.
             println!("{}", index);
         }
     }
+    // first image is suitable for left/top after checking the above log.
     let mut big_image = vec![];
-    // first image is suitable for left/top.
     big_image.push(vec![first_image.clone()]);
     // 12x12 big picture
     for i in 0..12 {
@@ -284,8 +256,8 @@ fn solve_day20() -> Result<(usize, usize), Box<dyn Error>> {
             }
             if j == 0 {
                 let prev = &big_image[i - 1][j];
-                let bottom = prev.all_number()[2];
-                let actual_bottom = prev.all_raw_number()[2];
+                let bottom = prev.list_unified_border_numbers()[2];
+                let actual_bottom = prev.list_border_numbers()[2];
                 let &next = inverse_mapping.get(&bottom).unwrap().iter()
                     .filter(|image| image.id != prev.id)
                     .next()
@@ -297,8 +269,8 @@ fn solve_day20() -> Result<(usize, usize), Box<dyn Error>> {
                 big_image[i].push(rotated);
             } else {
                 let prev = &big_image[i][j - 1];
-                let right = prev.all_number()[1];
-                let actual_right = prev.all_raw_number()[1];
+                let right = prev.list_unified_border_numbers()[1];
+                let actual_right = prev.list_border_numbers()[1];
                 let &next = inverse_mapping.get(&right).unwrap().iter()
                     .filter(|image| image.id != prev.id)
                     .next()
@@ -308,7 +280,7 @@ fn solve_day20() -> Result<(usize, usize), Box<dyn Error>> {
         }
     }
 
-    // combine the map
+    // combine the map(remove the border)
     let mut final_map = vec![vec!['-'; 96]; 96];
     let mut sea_count = 0;
     for i in 0..big_image.len() {
@@ -326,7 +298,7 @@ fn solve_day20() -> Result<(usize, usize), Box<dyn Error>> {
     }
 
     let mut monster_count = 0;
-    let count: usize = find_monster(&final_map);
+    let count: usize = count_monster(&final_map);
     if count != 0 {
         monster_count = count;
     }
@@ -367,7 +339,7 @@ fn rotate_clockwise(from: &Vec<Vec<char>>) -> Vec<Vec<char>> {
     data
 }
 
-fn find_monster(map: &Vec<Vec<char>>) -> usize {
+fn count_monster(map: &Vec<Vec<char>>) -> usize {
     let mut points_matrix = vec![
         vec!['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0'],
         vec!['1', '0', '0', '0', '0', '1', '1', '0', '0', '0', '0', '1', '1', '0', '0', '0', '0', '1', '1', '1'],
@@ -376,9 +348,10 @@ fn find_monster(map: &Vec<Vec<char>>) -> usize {
     let mut result = 0;
     for _rotate_count in 0..4 {
         points_matrix = rotate_clockwise(&points_matrix);
-        result += do_find(map, &flip_vertically(&points_matrix));
-        result += do_find(map, &flip_horizontally(&points_matrix));
-        result += do_find(map, &points_matrix);
+        // Looks like there is only one direction will be correct, so just do sum.
+        result += count_pattern(map, &flip_vertically(&points_matrix));
+        result += count_pattern(map, &flip_horizontally(&points_matrix));
+        result += count_pattern(map, &points_matrix);
         //we found it.
         if result != 0 {
             break;
@@ -387,7 +360,7 @@ fn find_monster(map: &Vec<Vec<char>>) -> usize {
     result
 }
 
-fn do_find(map: &Vec<Vec<char>>, rotated: &Vec<Vec<char>>) -> usize {
+fn count_pattern(map: &Vec<Vec<char>>, rotated: &Vec<Vec<char>>) -> usize {
     let mut result = 0;
     for y in 0..map.len() {
         for x in 0..map[y].len() {
