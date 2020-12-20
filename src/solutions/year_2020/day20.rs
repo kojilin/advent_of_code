@@ -396,7 +396,7 @@ fn do_find(map: &Vec<Vec<char>>, rotated: &Vec<Vec<char>>) -> usize {
                 for offset_x in 0..rotated[offset_y].len() {
                     let new_y = y + offset_y;
                     let new_x = x + offset_x;
-                    if new_y >= map.len() || new_y < 0 || new_x < 0 || new_x >= map[y].len() {
+                    if new_y >= map.len() || new_x >= map[y].len() {
                         found = false;
                         break;
                     }
