@@ -139,8 +139,8 @@ impl Image {
     }
 
     fn calculate_unified_col_pattern(&self, col_index: usize) -> i64 {
-        max(self.calculate_col_pattern(col_inndex, false),
-            self.calculate_col_pattern(col_inndex, true))
+        max(self.calculate_col_pattern(col_index, false),
+            self.calculate_col_pattern(col_index, true))
     }
 
     fn calculate_col_pattern(&self, col_index: usize, reverse: bool) -> i64 {
@@ -242,7 +242,7 @@ fn solve_day20() -> Result<(usize, usize), Box<dyn Error>> {
     for (index, number) in first_image.list_unified_border_numbers().iter().enumerate() {
         if map.get(&number).unwrap() == &1 {
             // this is 0,3. So just used it.
-            println!("{}", index);
+            println!("non matching direction of first image: {}", index);
         }
     }
     // first image is suitable for left/top after checking the above log.
@@ -302,7 +302,7 @@ fn solve_day20() -> Result<(usize, usize), Box<dyn Error>> {
     if count != 0 {
         monster_count = count;
     }
-    println!("{}", monster_count);
+    println!("Monster count: {}", monster_count);
     Ok((result, sea_count - 15 * monster_count))
 }
 
