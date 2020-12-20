@@ -29,7 +29,7 @@ fn solve_day19_2() -> Result<i64, Box<dyn Error>> {
                                           dp.get(&42).unwrap()))?;
     let postfix_rule = Regex::new(&format!("{}",
                                            dp.get(&31).unwrap()))?;
-    // we knot 0 = 8 11
+    // We know 0 = 8 11.
     pattern.insert(0, '^');
     pattern.push('$');
     let regex = Regex::new(&pattern)?;
@@ -45,6 +45,7 @@ fn solve_day19_2() -> Result<i64, Box<dyn Error>> {
                 continue;
             }
             for capture in special.captures_iter(&input) {
+                // so occurred count of 42 > 31
                 let prefix_count = prefix_rule.captures_iter(&capture["prefix"]).count();
                 let postfix_count = postfix_rule.captures_iter(&capture["postfix"]).count();
                 if prefix_count > postfix_count {
