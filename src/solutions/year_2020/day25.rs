@@ -21,7 +21,6 @@ fn find_value(key: i64) -> i64 {
         }
         count += 1;
     }
-    panic!();
 }
 
 #[cfg(test)]
