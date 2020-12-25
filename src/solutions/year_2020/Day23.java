@@ -32,10 +32,8 @@ public class Day23 {
         for (int i = 10; i <= 1_000_000; i++) {
             Node currentNode = new Node(i);
             map.put((long) i, currentNode);
-            if (prev != null) {
-                currentNode.previous = prev;
-                prev.next = currentNode;
-            }
+            currentNode.previous = prev;
+            prev.next = currentNode;
             prev = currentNode;
         }
         map.get(input[0]).previous = prev;
