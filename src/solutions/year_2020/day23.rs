@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 fn solve_day23(input: i64) -> Vec<u32> {
     let mut cups: Vec<u32> = input.to_string().chars().map(|c| c.to_digit(10).unwrap()).collect();
@@ -40,6 +40,54 @@ fn solve_day23(input: i64) -> Vec<u32> {
     cups
 }
 
+fn solve_day23_2() -> usize {
+    let first = vec![3, 6, 8, 1, 9, 5, 7, 4, 2];
+    //let first = vec![3, 8, 9, 1, 2, 5, 4, 6, 7];
+    // Preparing the next array.
+    let mut next = vec![0; 1_000_001];
+    for (index, &value) in first.iter().enumerate() {
+        if index < first.len() - 1 {
+            next[value] = first[index + 1];
+        }
+    }
+    next[first[first.len() - 1]] = 10;
+
+    for i in 10..1_000_000 {
+        next[i] = i + 1;
+    }
+    next[1_000_000] = first[0];
+
+    let mut current = 3;
+    for _ in 0..10_000_000 {
+        let mut picked = Vec::new();
+        let mut next_value = current;
+        for _ in 0..3 {
+            next_value = next[next_value];
+            picked.push(next_value);
+        }
+        let fourth = next[next_value];
+        next[current] = fourth;
+
+        let mut destination = current - 1;
+        if destination == 0 {
+            destination = 1_000_000;
+        }
+        while picked.contains(&destination) {
+            destination -= 1;
+            if destination == 0 {
+                destination = 1_000_000;
+            }
+        }
+        let tmp = next[destination];
+        next[picked[2]] = tmp;
+        next[destination] = picked[0];
+
+        current = next[current];
+    }
+
+    next[1] * next[next[1]]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -47,5 +95,11 @@ mod tests {
     #[test]
     fn test() {
         println!("Result1: {:?}", solve_day23(368195742));
+    }
+
+    #[test]
+    fn test2() {
+        println!("{}", solve_day23_2());
+        ;
     }
 }
