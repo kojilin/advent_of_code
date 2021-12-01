@@ -25,3 +25,7 @@ mod year_2020 {
     mod day24;
     mod day25;
 }
+
+mod year_2021 {
+    mod day1;
+}
