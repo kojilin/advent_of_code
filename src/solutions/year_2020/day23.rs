@@ -1,5 +1,3 @@
-use std::collections::{HashMap, HashSet};
-
 fn solve_day23(input: i64) -> Vec<u32> {
     let mut cups: Vec<u32> = input.to_string().chars().map(|c| c.to_digit(10).unwrap()).collect();
     let mut current = 0;
@@ -19,7 +17,7 @@ fn solve_day23(input: i64) -> Vec<u32> {
         if target == 0 {
             target = 9;
         }
-        let mut insert_index = 0;
+        let insert_index;
         loop {
             if let Some(index) = cups.iter().position(|v| v.eq(&target)) {
                 insert_index = index;
@@ -100,6 +98,5 @@ mod tests {
     #[test]
     fn test2() {
         println!("{}", solve_day23_2());
-        ;
     }
 }
