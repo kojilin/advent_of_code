@@ -1,12 +1,7 @@
-use std::borrow::{Borrow, BorrowMut};
-use std::cmp::min;
 use std::collections::HashSet;
-use std::env::var;
 use std::error::Error;
 use std::fs;
-use std::hash::Hash;
 use std::iter::FromIterator;
-use std::ops::Add;
 
 fn solve_day8_1() -> Result<i32, Box<dyn Error>> {
     return Ok(solve_1(parse_input()?));
