@@ -23,7 +23,7 @@ fn solve(fish: Vec<i32>, n: i32) -> i64 {
     sum
 }
 
-fn do_solve(mut day: i32, dp: &mut HashMap<i32, i64>) -> i64 {
+fn do_solve(day: i32, dp: &mut HashMap<i32, i64>) -> i64 {
     if dp.contains_key(&day) {
         return *dp.get(&day).unwrap();
     }
