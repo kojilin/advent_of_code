@@ -24,7 +24,6 @@ fn parse_input() -> Result<Vec<Vec<u32>>, Box<dyn Error>> {
     return Ok(result);
 }
 
-
 fn solve_1(mut map: Vec<Vec<u32>>) -> i64 {
     let mut result = 0;
     for _ in 0..100 {
@@ -111,7 +110,6 @@ fn solve_2(mut map: Vec<Vec<u32>>) -> i64 {
         }
     }
 }
-
 
 #[cfg(test)]
 mod tests {
