@@ -147,7 +147,6 @@ fn solve_2(inputs: Vec<Vec<char>>) -> i64 {
     return *scores.get(scores.len() / 2).unwrap();
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
