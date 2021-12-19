@@ -1,8 +1,7 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 use std::error::Error;
 use std::fs;
 use std::iter::FromIterator;
-use std::ops::Index;
 use std::str::FromStr;
 
 fn solve_day13_1() -> Result<i64, Box<dyn Error>> {
