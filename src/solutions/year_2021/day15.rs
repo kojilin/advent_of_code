@@ -115,7 +115,7 @@ fn find_cost(y: usize, x: usize, map: &Vec<Vec<u32>>) -> u32 {
     let div_x = x / width;
     let mod_y = y % height;
     let mod_x = x % width;
-    let cost = (map[mod_y][mod_x] + div_y as u32 + div_x as u32);
+    let cost = map[mod_y][mod_x] + div_y as u32 + div_x as u32;
     if cost % 9 == 0 {
         return 9;
     }
