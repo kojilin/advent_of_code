@@ -1,7 +1,7 @@
 use std::cmp::max;
 use std::error::Error;
 use std::fs;
-use regex::internal::Inst::Match;
+
 use regex::Regex;
 
 fn solve_day2() -> Result<i64, Box<dyn Error>> {
