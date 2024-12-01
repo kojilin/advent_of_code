@@ -59,3 +59,7 @@ mod year_2023 {
     mod day10;
     mod day11;
 }
+
+mod year_2024 {
+    mod day1;
+}
