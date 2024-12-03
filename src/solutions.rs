@@ -63,4 +63,5 @@ mod year_2023 {
 mod year_2024 {
     mod day1;
     mod day2;
+    mod day3;
 }
