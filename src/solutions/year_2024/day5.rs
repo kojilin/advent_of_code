@@ -8,41 +8,42 @@ fn solve_day5() -> Result<i64, Box<dyn Error>> {
     let lines: Vec<&str> = input.lines().collect();
     let mut total = 0i64;
     let mut is_checking = false;
-    let mut adjacents: HashMap<i64, Vec<i64>> = HashMap::new();
-    let mut queue: Vec<i64> = Vec::new();
-    let mut value_index: HashMap<i64, usize> = HashMap::new();
+    let mut rules: HashMap<i64, HashSet<i64>> = HashMap::new();
 
     for line in lines {
         if line.is_empty() {
-            println!("{:?}", adjacents);
             is_checking = true;
-            // build graph
-            let mut visited: HashSet<i64> = HashSet::new();
-            for x in adjacents.keys() {
-                dfs(*x, &adjacents, &mut visited, &mut queue);
-            }
-            for (index, &value) in queue.iter().enumerate() {
-                value_index.insert(value, index);
-            }
             continue;
         }
         if is_checking {
             // logic
-            println!("---------");
             let target: Vec<i64> = line.split(",").map(|c| c.parse::<i64>().unwrap()).collect();
-            println!("{:?}", target);
-            let map_index: Vec<usize> = target.iter().map(|&x| *value_index.get(&x).unwrap()).collect();
-            println!("{:?}", map_index);
-            if map_index.is_sorted() {
+            let mut has_wrong = false;
+
+            'outer: for i in 0..target.len() {
+                for j in i + 1..target.len() {
+                    if rules.get(&(target[i])).unwrap_or(&HashSet::new()).contains(&target[j]) {
+                        has_wrong = true;
+                        break 'outer;
+                    }
+                }
+            }
+            if !has_wrong {
                 total += target[target.len() / 2];
             }
         } else {
             let nums: Vec<i64> = line.split("|")
                 .map(|content| content.parse::<i64>().unwrap()).collect();
 
-            adjacents.entry(nums[0])
-                .and_modify(|e| { e.push(nums[1]) })
-                .or_insert(vec![nums[1]]);
+            rules.entry(nums[1])
+                .and_modify(|e| {
+                    e.insert(nums[0]);
+                })
+                .or_insert_with(|| {
+                    let mut set = HashSet::new();
+                    set.insert(nums[0]);
+                    set
+                });
         }
     }
 
