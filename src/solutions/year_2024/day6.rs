@@ -25,6 +25,7 @@ fn solve_day6() -> Result<i64, Box<dyn Error>> {
 }
 
 fn scan_map(map: &Vec<Vec<char>>, mut current: (i64, i64), mut current_direction: usize, visited: &mut HashSet<(i64, i64)>) {
+    const DIRECTION: [(i64, i64); 4] = [(-1, 0), (0, 1), (1, 0), (0, -1)];
     loop {
         visited.insert(current);
         let mut next = (current.0 + DIRECTION[current_direction].0, current.1 + DIRECTION[current_direction].1);
@@ -41,7 +42,6 @@ fn scan_map(map: &Vec<Vec<char>>, mut current: (i64, i64), mut current_direction
     }
 }
 
-const DIRECTION: [(i64, i64); 4] = [(-1, 0), (0, 1), (1, 0), (0, -1)];
 
 
 #[cfg(test)]
