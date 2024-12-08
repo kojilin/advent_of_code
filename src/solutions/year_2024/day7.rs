@@ -103,7 +103,7 @@ fn dfs_2(nums: &Vec<i64>, next_index: usize, current_value: i64, target: i64) ->
 }
 
 #[cfg(test)]
-mod Tests {
+mod tests {
     use super::*;
 
     #[test]
