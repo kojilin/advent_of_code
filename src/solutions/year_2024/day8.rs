@@ -1,12 +1,10 @@
 use std::collections::{HashMap, HashSet};
 use std::error::Error;
 use std::fs;
-use std::i64::MAX;
 
 fn solve_day8() -> Result<i64, Box<dyn Error>> {
     let input = fs::read_to_string("src/solutions/year_2024/day8.txt")?;
     let lines: Vec<&str> = input.lines().collect();
-    let mut result = 0;
     let mut map: Vec<Vec<char>> = Vec::new();
     for line in lines {
         let row: Vec<char> = line.chars().collect();
@@ -69,7 +67,6 @@ fn solve_day8() -> Result<i64, Box<dyn Error>> {
 fn solve_day8_2() -> Result<i64, Box<dyn Error>> {
     let input = fs::read_to_string("src/solutions/year_2024/day8.txt")?;
     let lines: Vec<&str> = input.lines().collect();
-    let mut result = 0;
     let mut map: Vec<Vec<char>> = Vec::new();
     for line in lines {
         let row: Vec<char> = line.chars().collect();
@@ -138,7 +135,8 @@ fn solve_day8_2() -> Result<i64, Box<dyn Error>> {
         })
         .collect();
 
-    let flattened: HashSet<(i64, i64)> = antenas.into_iter()
+    let flattened: HashSet<(i64, i64)> = antenas
+        .into_iter()
         .flat_map(|(_, vec)| vec.into_iter())
         .collect();
     result.extend(flattened);
