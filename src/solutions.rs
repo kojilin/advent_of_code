@@ -70,4 +70,5 @@ mod year_2024 {
     mod day7;
     mod day8;
     mod day9;
+    mod day10;
 }
