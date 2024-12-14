@@ -46,18 +46,6 @@ fn solve_day14() -> Result<i64, Box<dyn Error>> {
         }
     }
 
-    // debug
-    // for i in 0..map.len() {
-    //     for j in 0..map[i].len() {
-    //         if map[i][j] == 0 {
-    //             print!(".");
-    //         } else {
-    //             print!("{}", map[i][j]);
-    //         }
-    //     }
-    //     println!();
-    // }
-
     Ok(result[0] * result[1] * result[2] * result[3])
 }
 
@@ -102,7 +90,6 @@ fn solve_day14_2() -> Result<i64, Box<dyn Error>> {
             }
         }
 
-        // debug
         if found {
             for i in 0..map.len() {
                 for j in 0..map[i].len() {
@@ -118,25 +105,6 @@ fn solve_day14_2() -> Result<i64, Box<dyn Error>> {
         }
         count += 1;
     }
-
-    // let mut result: [i64; 4] = [0; 4];
-    // for i in 0..map.len() {
-    //     for j in 0..map[i].len() {
-    //         if map[i][j] == 0 {
-    //             continue;
-    //         }
-    //
-    //         if i < (HEIGHT / 2) as usize && j < (WIDTH / 2) as usize {
-    //             result[0] += map[i][j];
-    //         } else if i < (HEIGHT / 2) as usize && j > (WIDTH / 2) as usize {
-    //             result[1] += map[i][j];
-    //         } else if i > (HEIGHT / 2) as usize && j < (WIDTH / 2) as usize {
-    //             result[2] += map[i][j];
-    //         } else if i > (HEIGHT / 2) as usize && j > (WIDTH / 2) as usize {
-    //             result[3] += map[i][j];
-    //         }
-    //     }
-    // }
     Ok(count)
 }
 
