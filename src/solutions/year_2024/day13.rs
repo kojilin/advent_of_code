@@ -12,25 +12,34 @@ fn solve_day13() -> Result<i64, Box<dyn Error>> {
     let mut target = (-1, -1);
     let mut result = 0;
     while index < lines.len() {
-        if let Some(captures) = Regex::new(r"X\+(\d+),\s*Y\+(\d+)").unwrap().captures(lines[index]) {
+        if let Some(captures) = Regex::new(r"X\+(\d+),\s*Y\+(\d+)")
+            .unwrap()
+            .captures(lines[index])
+        {
             let x = captures.get(1).unwrap().as_str().parse::<i64>().unwrap();
-            let y = captures.get(2).unwrap().as_str().parse::<i64>().unwrap();;
+            let y = captures.get(2).unwrap().as_str().parse::<i64>().unwrap();
 
             a = (x, y);
         }
         index += 1;
 
-        if let Some(captures) = Regex::new(r"X\+(\d+),\s*Y\+(\d+)").unwrap().captures(lines[index]) {
+        if let Some(captures) = Regex::new(r"X\+(\d+),\s*Y\+(\d+)")
+            .unwrap()
+            .captures(lines[index])
+        {
             let x = captures.get(1).unwrap().as_str().parse::<i64>().unwrap();
-            let y = captures.get(2).unwrap().as_str().parse::<i64>().unwrap();;
+            let y = captures.get(2).unwrap().as_str().parse::<i64>().unwrap();
 
             b = (x, y);
         }
         index += 1;
 
-        if let Some(captures) = Regex::new(r"X=(\d+),\s*Y=(\d+)").unwrap().captures(lines[index]) {
+        if let Some(captures) = Regex::new(r"X=(\d+),\s*Y=(\d+)")
+            .unwrap()
+            .captures(lines[index])
+        {
             let x = captures.get(1).unwrap().as_str().parse::<i64>().unwrap();
-            let y = captures.get(2).unwrap().as_str().parse::<i64>().unwrap();;
+            let y = captures.get(2).unwrap().as_str().parse::<i64>().unwrap();
 
             target = (x, y);
         }
@@ -43,8 +52,10 @@ fn solve_day13() -> Result<i64, Box<dyn Error>> {
         let mut possible_result = i64::MAX;
         // println!("check for {:?} & {:?} = {:?}", a, b, target);
         while first * a.0 <= target.0 && first * a.1 <= target.1 {
-            if (target.0 - first * a.0) % b.0 == 0 && (target.1 - first * a.1) % b.1 == 0
-                && (target.0 - first * a.0) / b.0 == (target.1 - first * a.1) / b.1 {
+            if (target.0 - first * a.0) % b.0 == 0
+                && (target.1 - first * a.1) % b.1 == 0
+                && (target.0 - first * a.0) / b.0 == (target.1 - first * a.1) / b.1
+            {
                 possible_result = min(possible_result, first * 3 + (target.0 - first * a.0) / b.0);
             }
             first += 1;
@@ -65,50 +76,57 @@ fn solve_day13_2() -> Result<i64, Box<dyn Error>> {
     let mut target = (-1, -1);
     let mut result = 0;
     while index < lines.len() {
-        if let Some(captures) = Regex::new(r"X\+(\d+),\s*Y\+(\d+)").unwrap().captures(lines[index]) {
+        if let Some(captures) = Regex::new(r"X\+(\d+),\s*Y\+(\d+)")
+            .unwrap()
+            .captures(lines[index])
+        {
             let x = captures.get(1).unwrap().as_str().parse::<i64>().unwrap();
-            let y = captures.get(2).unwrap().as_str().parse::<i64>().unwrap();;
+            let y = captures.get(2).unwrap().as_str().parse::<i64>().unwrap();
 
             a = (x, y);
         }
         index += 1;
 
-        if let Some(captures) = Regex::new(r"X\+(\d+),\s*Y\+(\d+)").unwrap().captures(lines[index]) {
+        if let Some(captures) = Regex::new(r"X\+(\d+),\s*Y\+(\d+)")
+            .unwrap()
+            .captures(lines[index])
+        {
             let x = captures.get(1).unwrap().as_str().parse::<i64>().unwrap();
-            let y = captures.get(2).unwrap().as_str().parse::<i64>().unwrap();;
+            let y = captures.get(2).unwrap().as_str().parse::<i64>().unwrap();
 
             b = (x, y);
         }
         index += 1;
 
-        if let Some(captures) = Regex::new(r"X=(\d+),\s*Y=(\d+)").unwrap().captures(lines[index]) {
+        if let Some(captures) = Regex::new(r"X=(\d+),\s*Y=(\d+)")
+            .unwrap()
+            .captures(lines[index])
+        {
             let x = captures.get(1).unwrap().as_str().parse::<i64>().unwrap();
-            let y = captures.get(2).unwrap().as_str().parse::<i64>().unwrap();;
+            let y = captures.get(2).unwrap().as_str().parse::<i64>().unwrap();
 
             target = (10000000000000 + x, 10000000000000 + y);
+            // target = (x, y);
         }
         index += 1;
         // may empty line
         index += 1;
+        let right = (target.0 * b.1 - target.1 * b.0);
+        let x = b.1 * a.0 - a.1 * b.0;
+        if right % x != 0 {
+            continue;
+        }
 
-        // solve here
-        let mut first = 0;
-        let mut possible_result = i64::MAX;
-        // println!("check for {:?} & {:?} = {:?}", a, b, target);
-        while first * a.0 <= target.0 && first * a.1 <= target.1 {
-            if (target.0 - first * a.0) % b.0 == 0 && (target.1 - first * a.1) % b.1 == 0
-                && (target.0 - first * a.0) / b.0 == (target.1 - first * a.1) / b.1 {
-                possible_result = min(possible_result, first * 3 + (target.0 - first * a.0) / b.0);
-            }
-            first += 1;
+        let first = right / x;
+        let remain = target.0 - first * a.0;
+        if remain % b.0 != 0 {
+            continue;
         }
-        if possible_result != i64::MAX {
-            result += possible_result;
-        }
+        let second = remain / b.0;
+        result += first * 3 + second;
     }
     Ok(result)
 }
-
 
 #[cfg(test)]
 mod tests {
