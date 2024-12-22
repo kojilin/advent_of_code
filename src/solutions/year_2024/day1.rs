@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 use std::error::Error;
 use std::fs;
-use std::io::stdout;
 use std::ops::{Mul, Sub};
 
 fn solve_day1() -> Result<i64, Box<dyn Error>> {
