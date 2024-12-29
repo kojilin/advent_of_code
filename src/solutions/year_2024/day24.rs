@@ -106,7 +106,7 @@ fn try_fix<'a>(
     froms: &mut HashMap<&'a str, (&'a str, &'a str, &'a str)>,
     gates: &HashMap<&'a str, i32>,
     stack: i32,
-) -> Vec<String>{
+) -> Vec<String> {
     sort_inputs(froms);
 
     let mut names = None;
@@ -251,6 +251,7 @@ impl Node {
     }
 }
 
+// No need name for middle gate, we don't compare name directly
 fn expected_term(bit: i32, max_bit: i32) -> Node {
     if bit == 0 {
         Node::new(
@@ -297,8 +298,9 @@ fn expected_term(bit: i32, max_bit: i32) -> Node {
     }
 }
 
+// No need name for middle gate, we don't compare name directly
 fn expected_term_from_lower_bit(bit: i32) -> Node {
-    return if bit == 0 {
+    if bit == 0 {
         Node::new(
             "".to_string(),
             "AND".to_string(),
@@ -357,7 +359,7 @@ fn expected_term_from_lower_bit(bit: i32) -> Node {
                 Some(Box::new(expected_term_from_lower_bit(bit - 1))),
             ))),
         )
-    };
+    }
 }
 
 #[cfg(test)]
